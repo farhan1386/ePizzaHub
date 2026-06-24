@@ -1,0 +1,81 @@
+﻿@model ePizzaHub.Models.PizzaModel
+
+@{
+    ViewData["Title"] = Model.f_name;
+}
+
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col">
+            <a asp-action="Index" class="btn btn-link text-decoration-none text-muted p-0">
+                <i class="bi bi-arrow-left-short fs-5 align-middle"></i> Back to Menu
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-5 align-items-center">
+        <div class="col-md-6 text-center bg-light rounded-4 p-5 shadow-sm">
+            <img src="@Model.f_image_url" class="img-fluid rounded-3 object-fit-cover shadow-sm" style="max-height: 400px; width: 100%;" alt="@Model.f_name">
+        </div>
+
+        <div class="col-md-6">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <h1 class="display-5 fw-black text-dark mb-0">@Model.f_name</h1>
+                <span class="badge bg-danger fs-3 px-4 py-2 rounded-pill shadow-sm">$@Model.f_price</span>
+            </div>
+
+            <p class="fs-5 text-muted mb-4 lead">@Model.f_description</p>
+
+            <div class="card border-0 bg-light rounded-4 p-4 mb-4 shadow-sm">
+                <div class="row text-center text-md-start">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <span class="text-muted d-block small uppercase tracking-wider">Availability Status</span>
+                        @if (Model.f_is_available)
+                        {
+                            <span class="text-success fw-bold fs-5">
+                                <i class="bi bi-check-circle-fill me-1"></i> Ready to Bake
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-danger fw-bold fs-5">
+                                <i class="bi bi-x-circle-fill me-1"></i> Sold Out Today
+                            </span>
+                        }
+                    </div>
+                    <div class="col-sm-6">
+                        <span class="text-muted d-block small uppercase tracking-wider">Item Reference ID</span>
+                        <code class="text-dark fw-bold fs-6">@Model.f_uid.ToString().Substring(0, 8)...</code>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.f_is_available)
+            {
+                <form asp-controller="Cart" asp-action="Add" method="post" class="mt-4">
+                    <input type="hidden" name="pizzaUid" value="@Model.f_uid" />
+
+                    <div class="row g-3">
+                        <div class="col-sm-4">
+                            <div class="input-group input-group-lg rounded-pill overflow-hidden bg-white border shadow-sm">
+                                <span class="input-group-text bg-transparent border-0 text-muted ps-3 fs-6">Qty</span>
+                                <input type="number" name="quantity" class="form-control bg-transparent border-0 text-center fw-bold text-dark fs-5" value="1" min="1" max="10">
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <button type="submit" class="btn btn-danger btn-lg w-100 rounded-pill py-3 fw-bold shadow">
+                                <i class="bi bi-bag-plus-fill me-2"></i> Add to Active Order
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <button class="btn btn-secondary btn-lg w-100 rounded-pill py-3 fw-bold mt-4" disabled>
+                    <i class="bi bi-bell-slash me-2"></i> Currently Unavailable
+                </button>
+            }
+        </div>
+    </div>
+</div>

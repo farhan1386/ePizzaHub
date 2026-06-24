@@ -1,0 +1,11 @@
+<Solution>
+  <Project Path="ePizzaHub.API/ePizzaHub.API.csproj" />
+  <Project Path="ePizzaHub.BusinessLogic/ePizzaHub.BusinessLogic.csproj" />
+  <Project Path="ePizzaHub.Database/ePizzaHub.Database.sqlproj" Id="2eed7e4d-0d7c-42a8-a930-8757c2187d68">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="ePizzaHub.Models/ePizzaHub.Models.csproj" />
+  <Project Path="ePizzaHub.Test/ePizzaHub.Test.csproj" />
+  <Project Path="ePizzaHub.Web/ePizzaHub.Web.csproj" />
+</Solution>
