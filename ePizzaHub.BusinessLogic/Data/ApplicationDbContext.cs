@@ -164,6 +164,7 @@ namespace ePizzaHub.BusinessLogic.Data
                 else if (entry.State == EntityState.Modified)
                 {
                     entry.Property(x => x.f_create_date).IsModified = false;
+                    entry.Property(x => x.f_iid).IsModified = false;
                     entry.Entity.f_update_date = currentTime;
                 }
             }
