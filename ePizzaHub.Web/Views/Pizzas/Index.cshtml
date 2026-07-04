@@ -1,48 +1,79 @@
 ﻿@model IEnumerable<ePizzaHub.Models.PizzaModel>
 
 @{
-    ViewData["Title"] = "Fresh Pizza Menu";
+    ViewData["Title"] = "Pizza Menu";
 }
 
-<div class="container py-5">
-    <div class="row align-items-center mb-5 text-center text-md-start">
-        <div class="col-md-6">
-            <h1 class="display-4 fw-black text-dark mb-2">ePizza <span class="text-danger">Hub</span></h1>
-            <p class="lead text-muted">Freshly baked software structures and cheese toppings delivered straight to your terminal.</p>
+<div class="container py-4">
+    <div class="hero-banner p-5 text-white mb-5 shadow-lg d-flex align-items-center">
+        <div class="row w-100 align-items-center">
+            <div class="col-lg-7 text-center text-lg-start">
+                <span class="badge bg-danger px-3 py-2 rounded-pill uppercase tracking-wider mb-3">Authentic Italian</span>
+                <h1 class="display-3 fw-black mb-2">ePizza <span class="text-danger">Hub</span></h1>
+                <p class="lead text-white-50 fs-5 mb-4">Freshly baked software structures and artisanal hot cheese toppings delivered straight from our terminal engine to your doorstep.</p>
+                <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+                    <a href="#menu-section" class="btn btn-danger btn-lg rounded-pill px-4 fw-bold shadow-sm">Explore Menu</a>
+                    <a asp-controller="Checkouts" asp-action="Index" class="btn btn-outline-light btn-lg rounded-pill px-4">
+                        <i class="bi bi-cart3 me-2"></i>View Active Basket
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center d-none d-lg-block">
+                <span class="hero-pizza-art">🍕</span>
+            </div>
         </div>
-        <div class="col-md-6 text-md-end">
-            <a href="#" class="btn btn-outline-dark btn-lg rounded-pill px-4 shadow-sm position-relative">
-                <i class="bi bi-cart3 me-2"></i> View Basket
-            </a>
+    </div>
+
+    <div id="menu-section" class="row align-items-center mb-4 g-3">
+        <div class="col-md-7">
+            <div class="d-flex flex-wrap gap-2">
+                <span class="btn bg-light text-dark fw-bold rounded-pill px-3 py-2 category-pill active">All Menu Items</span>
+                <span class="btn bg-light text-muted fw-semibold rounded-pill px-3 py-2 category-pill"> Vegetarian</span>
+                <span class="btn bg-light text-muted fw-semibold rounded-pill px-3 py-2 category-pill"> Meat Lovers</span>
+                <span class="btn bg-light text-muted fw-semibold rounded-pill px-3 py-2 category-pill"> Beverages</span>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="input-group rounded-pill border overflow-hidden bg-light shadow-sm">
+                <span class="input-group-text bg-transparent border-0 text-muted ps-3"><i class="bi bi-search"></i></span>
+                <input type="text" id="menuSearch" class="form-control bg-transparent border-0 py-2.5 ps-1" placeholder="Search craving pizzas...">
+            </div>
         </div>
     </div>
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
         @foreach (var pizza in Model)
         {
-            <div class="col">
-                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden position-relative tracking-card">
-                    <div class="position-absolute top-0 end-0 m-3 z-3">
-                        <span class="badge bg-danger fs-5 px-3 py-2 rounded-pill shadow-sm">$@pizza.f_price</span>
+            <div class="col pizza-item-node">
+                <div class="card h-100 bg-white border-0 shadow-sm rounded-4 p-3 pizza-card">
+                    <div class="pizza-img-wrapper position-relative mb-3 shadow-inner">
+                        <div class="position-absolute top-0 end-0 m-2 z-3">
+                            <span class="badge bg-dark fs-5 fw-bold px-3 py-1.5 rounded-pill shadow">$@pizza.f_price</span>
+                        </div>
+                        <img src="@(string.IsNullOrEmpty(pizza.f_image_url) || pizza.f_image_url == "https://placehold.co" ? $"https://placehold.co{pizza.f_name.Replace(" ", "+")}" : pizza.f_image_url)" class="img-fluid rounded-3" alt="@pizza.f_name" loading="lazy">
                     </div>
 
-                    <div class="bg-light p-4 text-center">
-                        <img src="@pizza.f_image_url" class="img-fluid rounded-3 object-fit-cover" style="height: 180px; width: 100%;" alt="@pizza.f_name">
-                    </div>
+                    <div class="card-body d-flex flex-column p-2">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h4 class="card-title fw-bold text-dark m-0">@pizza.f_name</h4>
+                            <span class="text-success small fw-semibold"><i class="bi bi-fire text-danger"></i> Hot</span>
+                        </div>
+                        <p class="card-text text-muted small flex-grow-1 mb-3">@pizza.f_description</p>
 
-                    <div class="card-body d-flex flex-column p-4">
-                        <h4 class="card-title fw-bold text-dark mb-2">@pizza.f_name</h4>
-                        <p class="card-text text-muted small flex-grow-1">@pizza.f_description</p>
-
-                        <form asp-controller="Cart" asp-action="Add" method="post" class="mt-3">
-                            <input type="hidden" name="pizzaUid" value="@pizza.f_uid" />
-                            <div class="input-group mb-3 rounded-pill overflow-hidden bg-light border">
-                                <span class="input-group-text bg-transparent border-0 text-muted ps-3">Qty</span>
-                                <input type="number" name="quantity" class="form-control bg-transparent border-0 text-center fw-bold text-dark" value="1" min="1" max="10">
+                        <form asp-controller="CartItems" asp-action="Post" method="post" class="mt-auto">
+                            <input type="hidden" name="f_pizza_uid" value="@pizza.f_uid" />
+                            <div class="row g-2 align-items-center">
+                                <div class="col-4">
+                                    <div class="input-group input-group-sm bg-light rounded-pill border overflow-hidden p-1">
+                                        <input type="number" name="f_quantity" class="form-control bg-transparent border-0 text-center fw-bold text-dark px-1" value="1" min="1" max="10">
+                                    </div>
+                                </div>
+                                <div class="col-8">
+                                    <button type="submit" class="btn btn-danger btn-sm w-100 rounded-pill py-2 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
+                                        <i class="bi bi-bag-plus-fill"></i> Add to Order
+                                    </button>
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-danger w-100 rounded-pill py-2.5 fw-bold shadow-sm">
-                                <i class="bi bi-bag-plus-fill me-2"></i> Add to Order
-                            </button>
                         </form>
                     </div>
                 </div>
@@ -50,3 +81,21 @@
         }
     </div>
 </div>
+
+<script>
+    document.getElementById('menuSearch').addEventListener('input', function (e) {
+        const keyword = e.target.value.toLowerCase().trim();
+        const pizzaCards = document.querySelectorAll('.pizza-item-node');
+
+        pizzaCards.forEach(card => {
+            const pizzaName = card.querySelector('.card-title').textContent.toLowerCase();
+            const pizzaDesc = card.querySelector('.card-text').textContent.toLowerCase();
+
+            if (pizzaName.includes(keyword) || pizzaDesc.includes(keyword)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+</script>

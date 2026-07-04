@@ -19,6 +19,13 @@ namespace ePizzaHub.BusinessLogic.Services
             return await _cartItemRepository.Get();
         }
 
+        public async Task<IEnumerable<CartItemModel>> GetCartItemsBySessionAsync(string sessionUid)
+        {
+            var allItems = await _cartItemRepository.Get();
+
+            return allItems.Where(item => item.f_customer_session_uid == sessionUid);
+        }
+
         public async Task<CartItemModel?> GetCartItemByUidAsync(Guid uid)
         {
             return await _cartItemRepository.Find(uid);
@@ -60,7 +67,6 @@ namespace ePizzaHub.BusinessLogic.Services
                 throw;
             }
         }
-
         public async Task<int> DeleteCartItemAsync(Guid uid)
         {
             try

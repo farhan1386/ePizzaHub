@@ -20,6 +20,8 @@ builder.Services.AddScoped<InvokeDataModel>(provider => new InvokeDataModel
     commandTimeout = 30
 });
 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddScoped<IPizzaRepository, PizzaRepository>();
@@ -31,6 +33,7 @@ builder.Services.AddScoped<PizzaService>();
 builder.Services.AddScoped<CartItemService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<OrderItemService>();
+builder.Services.AddScoped<UserService>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();

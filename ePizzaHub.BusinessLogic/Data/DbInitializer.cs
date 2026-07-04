@@ -131,14 +131,14 @@ namespace ePizzaHub.BusinessLogic.Data
             await context.PizzaCategories.AddRangeAsync(new List<PizzaCategoryModel> { vegCategory, nonVegCategory });
             await context.SaveChangesAsync();
 
-            // 6. Seed Specific Pizza Menu Items
+            // 6. Seed Specific Pizza Menu Items with explicit .png paths
             var margherita = new PizzaModel
             {
                 f_uid = Guid.NewGuid(),
                 f_name = "Classic Margherita",
                 f_description = "Traditional fresh mozzarella cheese, rich herb tomato base sauce, and basil leaves.",
                 f_price = 10.99m,
-                f_image_url = "https://placehold.co",
+                f_image_url = "https://placehold.co", // Added clean image suffix
                 f_is_available = true,
                 f_category_uid = vegCategory.f_uid,
                 f_create_date = DateTime.Now,
@@ -151,7 +151,7 @@ namespace ePizzaHub.BusinessLogic.Data
                 f_name = "Spicy Pepperoni Supreme",
                 f_description = "Loaded with double premium cured pepperoni slices, mozzarella, and hot jalapeños.",
                 f_price = 14.49m,
-                f_image_url = "https://placehold.co",
+                f_image_url = "https://placehold.co", // Added clean image suffix
                 f_is_available = true,
                 f_category_uid = nonVegCategory.f_uid,
                 f_create_date = DateTime.Now,
@@ -164,7 +164,7 @@ namespace ePizzaHub.BusinessLogic.Data
                 f_name = "Smoky BBQ Chicken",
                 f_description = "Grilled chicken chunks, red sweet onions, bell peppers, and signature smoky BBQ drizzle.",
                 f_price = 13.99m,
-                f_image_url = "https://placehold.co",
+                f_image_url = "https://placehold.co", // Added clean image suffix
                 f_is_available = true,
                 f_category_uid = nonVegCategory.f_uid,
                 f_create_date = DateTime.Now,
@@ -203,7 +203,6 @@ namespace ePizzaHub.BusinessLogic.Data
             };
             await context.Orders.AddAsync(sampleOrder);
             await context.SaveChangesAsync();
-
             // 9. Seed Multi-Item Order Snapshot Extensions 
             var orderItem1 = new OrderItemModel
             {
@@ -229,6 +228,7 @@ namespace ePizzaHub.BusinessLogic.Data
             await context.OrderItems.AddRangeAsync(new List<OrderItemModel> { orderItem1, orderItem2 });
             await context.SaveChangesAsync();
 
+            // 10. Seed Core Financial Checkout Settlement Logs
             var paymentLog = new PaymentModel
             {
                 f_uid = Guid.NewGuid(),
@@ -240,7 +240,8 @@ namespace ePizzaHub.BusinessLogic.Data
                 f_create_date = DateTime.Now,
                 f_create_by = customerUser.f_uid
             };
-            await context.Payments.AddAsync(paymentLog); await context.SaveChangesAsync();
+            await context.Payments.AddAsync(paymentLog);
+            await context.SaveChangesAsync();
         }
     }
 }

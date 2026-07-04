@@ -1,0 +1,62 @@
+﻿@model ePizzaHub.Models.UserModel
+
+@{
+    ViewData["Title"] = "Sign In to Your Account";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="bg-dark p-4 text-center text-white position-relative">
+                    <span class="fs-1 d-block mb-1">🍕</span>
+                    <h3 class="fw-black m-0">Welcome Back to ePizza<span class="text-danger">Hub</span></h3>
+                    <p class="text-white-50 small m-0 mt-1">Sign in to unlock hot saved addresses and track orders</p>
+                </div>
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form asp-controller="Account" asp-action="Login" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-pill small py-2 px-3 mb-4"></div>
+
+                        <!-- Email Input Block -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-dark small text-uppercase tracking-wider">Email Address</label>
+                            <div class="input-group border rounded-pill overflow-hidden bg-light shadow-sm">
+                                <span class="input-group-text bg-transparent border-0 text-muted ps-3"><i class="bi bi-envelope"></i></span>
+                                <input type="email" asp-for="f_email" class="form-control bg-transparent border-0 py-2.5" placeholder="name@domain.com" required autocomplete="email" />
+                            </div>
+                            <span asp-validation-for="f_email" class="text-danger small px-2"></span>
+                        </div>
+
+                        <!-- Password Input Block -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-label fw-bold text-dark small text-uppercase tracking-wider m-0">Password</label>
+                                <a asp-action="ForgotPassword" class="text-decoration-none small text-danger fw-semibold">Forgot?</a>
+                            </div>
+                            <div class="input-group border rounded-pill overflow-hidden bg-light shadow-sm">
+                                <span class="input-group-text bg-transparent border-0 text-muted ps-3"><i class="bi bi-lock"></i></span>
+                                <input type="password" asp-for="f_password_hash" class="form-control bg-transparent border-0 py-2.5" placeholder="••••••••" required autocomplete="current-password" />
+                            </div>
+                            <span asp-validation-for="f_password_hash" class="text-danger small px-2"></span>
+                        </div>
+
+                        <div class="mb-4 form-check ms-1">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-input-label small text-muted fw-medium" for="rememberMe">Keep me signed in</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-danger w-100 rounded-pill py-2.5 fw-bold shadow-sm mb-3">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Secure Login
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="small text-muted m-0">New to the kitchen? <a asp-action="Register" class="text-decoration-none text-danger fw-bold">Create an Account</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
