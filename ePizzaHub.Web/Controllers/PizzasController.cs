@@ -1,10 +1,5 @@
 ﻿using ePizzaHub.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
 
 namespace ePizzaHub.Web.Controllers
 {
@@ -33,6 +28,51 @@ namespace ePizzaHub.Web.Controllers
                 return NotFound();
             }
             return View(match);
+        }
+
+        // POST: Pizzas/AddToCart
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddToCart(Guid pizzaUid, int quantity)
+        {
+            // 1. Establish or extract unique identification tracking cookie session for your user
+            string? sessionUid = HttpContext.Session.GetString("CustomerSessionUid");
+            if (string.IsNullOrEmpty(sessionUid))
+            {
+                sessionUid = Guid.NewGuid().ToString();
+                HttpContext.Session.SetString("CustomerSessionUid", sessionUid);
+            }
+
+            // 2. Align your submission payload data structure directly matching CartItemModel
+            var cartItemPayload = new
+            {
+                f_customer_session_uid = sessionUid,
+                f_pizza_uid = pizzaUid,
+                f_quantity = quantity,
+                f_create_date = DateTime.Now,
+                f_create_by = Guid.Empty // Safe operational system baseline marker for fallback items
+            };
+
+            try
+            {
+                // 3. Dispatch the payload parameters downstream via API routing structure
+                var response = await _httpClient.PostAsJsonAsync("api/CartItems", cartItemPayload);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Redirect back to catalog to explore more items
+                    return RedirectToAction(nameof(Index));
+                }
+
+                ModelState.AddModelError("", "The API network engine declined basket data initialization.");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Failed to bridge session communication channels: {ex.Message}");
+            }
+
+            // Fallback back onto details display view context if structural transaction is blocked
+            return RedirectToAction(nameof(Details), new { uid = pizzaUid });
         }
 
         [HttpPost]

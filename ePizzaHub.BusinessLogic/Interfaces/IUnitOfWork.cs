@@ -9,6 +9,8 @@ namespace ePizzaHub.BusinessLogic.Interfaces
         IOrderItemRepository OrderItemRepository { get; }
         IOrderRepository OrderRepository { get; }
         IPizzaRepository Pizzas { get; }
+        IUserRepository Users { get; }
+        IRoleRepository Roles { get; }
         Task<int> CompleteAsync();
         Task BeginAsync();
         Task CommitAsync();

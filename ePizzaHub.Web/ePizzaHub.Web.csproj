@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ePizzaHub.API\ePizzaHub.API.csproj" />
-    <ProjectReference Include="..\ePizzaHub.BusinessLogic\ePizzaHub.BusinessLogic.csproj" />
     <ProjectReference Include="..\ePizzaHub.Models\ePizzaHub.Models.csproj" />
   </ItemGroup>
 

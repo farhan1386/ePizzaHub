@@ -3,45 +3,176 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ePizzaHub.Web</title>
+    <title>@ViewData["Title"] - ePizza Hub</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Added Bootstrap Icons CDN to support your bi-* classes -->
+    <link rel="stylesheet" href="https://jsdelivr.net" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ePizzaHub.Web.styles.css" asp-append-version="true" />
+    <style>
+        .navbar {
+        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        }
+
+        .nav-link-custom {
+        font-weight: 700;
+        color: #212529;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.2s ease;
+        padding: 0.5rem 1rem !important;
+        }
+
+        .nav-link-custom:hover, .nav-link-custom.active {
+        color: #dc3545 !important;
+        transform: translateY(-1px);
+        }
+
+        .cart-btn {
+        background-color: #dc3545;
+        color: #ffffff;
+        font-weight: 700;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .cart-btn:hover {
+        background-color: #bd2130;
+        color: #ffffff;
+        transform: scale(1.03);
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .footer-brand {
+        font-size: 1.4rem;
+        font-weight: 800;
+        }
+    </style>
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ePizzaHub.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+<body class="d-flex flex-column min-vh-100 bg-white">
+    <header class="sticky-top shadow-sm border-bottom">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+            <div class="container">
+
+                <a class="navbar-brand d-flex align-items-center gap-2 fs-2 fw-black text-dark text-decoration-none" asp-controller="Pizzas" asp-action="Index">
+                    <span class="fs-1">🍕</span> <span class="tracking-tight">ePizza<span class="text-danger">Hub</span></span>
+                </a>
+
+                <!-- Mobile Navigation Context Responsive Trigger -->
+                <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#ePizzaNavbarMain">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <!-- Complete Real-World Navigation Contract Links Map -->
+                <div class="collapse navbar-collapse" id="ePizzaNavbarMain">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link nav-link-custom" asp-controller="Pizzas" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link nav-link-custom" href="/Pizzas#menu-section">Our Menu</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" asp-controller="Orders" asp-action="Index">Track Order</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="#contact-footer">Contact Us</a>
                         </li>
                     </ul>
+
+                    <!-- Right-Side Interactive E-Commerce Session Handlers & Login Controls -->
+                    <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
+                        <!-- Dynamic Security Auth Conditional Node Block -->
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <div class="dropdown">
+                                <button class="btn btn-light rounded-pill border px-3 py-2 fw-bold d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-circle fs-5 text-danger"></i>
+                                    <span>Hi, @(User.Identity.Name ?? "Customer")</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-2">
+                                    <li><a class="dropdown-item py-2 fw-semibold" href="#"><i class="bi bi-shield-check me-2 text-muted"></i>Dashboard</a></li>
+                                    <li><a class="dropdown-item py-2 fw-semibold" href="#"><i class="bi bi-clock-history me-2 text-muted"></i>Past Orders</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item py-2 fw-semibold text-danger" href="/Account/Logout"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a></li>
+                                    end_of_file_mark
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a href="/Account/Login" class="btn btn-link text-decoration-none text-dark fw-bold nav-link-custom p-0">
+                                <i class="bi bi-box-arrow-in-right me-1 fs-5 align-middle"></i> Login
+                            </a>
+                            <span class="text-muted d-none d-lg-inline">|</span>
+                            <a href="/Account/Register" class="btn btn-outline-dark rounded-pill px-3.5 py-1.5 fw-bold btn-sm">Sign Up</a>
+                        }
+
+                        <!-- High-Utility Shopping Basket Micro-Widget -->
+                        <a asp-controller="CartItems" asp-action="Index" class="btn cart-btn rounded-pill px-4 py-2 d-flex align-items-center gap-2 shadow-sm">
+                            <i class="bi bi-cart-dash-fill fs-5"></i>
+                            <span class="d-none d-sm-inline">Cart</span>
+                            <span class="badge bg-white text-danger px-2 py-1 rounded-circle fw-black border fs-6">
+                                @await Component.InvokeAsync("CartCount")
+                            </span>
+                        </a>
+
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <!-- Content Workspace -->
+    <div class="flex-grow-1">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <!-- Production-Grade Full Commercial Interactive Contact Footer -->
+    <footer id="contact-footer" class="bg-dark text-white py-5 mt-auto">
         <div class="container">
-            &copy; 2026 - ePizzaHub.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row g-4 mb-4">
+                <div class="col-md-4 text-center text-md-start">
+                    <h5 class="text-danger footer-brand mb-3">🍕 ePizzaHub</h5>
+                    <p class="text-white-50 small">Hot pizza dough structures, savory herb marinara sauces, and high-performance system models compiled freshly for your terminal craving operations.</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <h6 class="text-uppercase fw-bold mb-3 tracking-wider text-white">Baking Hours</h6>
+                    <ul class="list-unstyled text-white-50 small">
+                        <li class="mb-1">Mon - Thu: 11:00 AM - 11:00 PM</li>
+                        <li class="mb-1">Fri - Sat: 11:00 AM - Midnight</li>
+                        <li>Sunday: 12:00 PM - 10:00 PM</li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-center text-md-end">
+                    <h6 class="text-uppercase fw-bold mb-3 tracking-wider text-white">Contact Hotline</h6>
+                    <p class="text-danger fw-black fs-4 mb-1"><i class="bi bi-telephone-fill me-1"></i> 1-800-PIZZA-HUB</p>
+                    <p class="text-white-50 small"><i class="bi bi-envelope me-1"></i> support@epizzahub.com</p>
+                </div>
+            </div>
+
+            <!-- Fixed and completed broken block -->
+            <div class="border-top border-secondary pt-4 text-center">
+                <div class="row align-items-center g-2">
+                    <div class="col-md-6 text-center text-md-start">
+                        <p class="mb-0 text-white-50 small">&copy; @DateTime.Now.Year ePizzaHub Inc. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <p class="mb-0 text-white-50 small">Engineered with .NET Core & EF Core</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
+
+    <!-- Essential JavaScript Dependencies -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

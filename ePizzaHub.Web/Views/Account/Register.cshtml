@@ -1,0 +1,84 @@
+﻿@model ePizzaHub.Models.UserModel
+
+@{
+    ViewData["Title"] = "Join the ePizzaHub Community";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="bg-dark p-4 text-center text-white">
+                    <span class="fs-1 d-block mb-1">🥖</span>
+                    <h3 class="fw-black m-0">Create Your Profile</h3>
+                    <p class="text-white-50 small m-0 mt-1">Get ready to track your baking crust milestones</p>
+                </div>
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form asp-controller="Account" asp-action="Register" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-pill small py-2 px-3 mb-4"></div>
+
+                        <!-- Full Name Rows Block -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-6">
+                                <label class="form-label fw-bold text-dark small text-uppercase tracking-wider">First Name</label>
+                                <div class="input-group border rounded-pill overflow-hidden bg-light shadow-sm">
+                                    <span class="input-group-text bg-transparent border-0 text-muted ps-3"><i class="bi bi-person"></i></span>
+                                    <input type="text" asp-for="f_fname" class="form-control bg-transparent border-0 py-2.5" placeholder="Farhan" required />
+                                </div>
+                                <span asp-validation-for="f_fname" class="text-danger small px-2"></span>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-bold text-dark small text-uppercase tracking-wider">Last Name</label>
+                                <div class="input-group border rounded-pill overflow-hidden bg-light shadow-sm">
+                                    <span class="input-group-text bg-transparent border-0 text-muted ps-3"><i class="bi bi-person-fill"></i></span>
+                                    <input type="text" asp-for="f_lname" class="form-control bg-transparent border-0 py-2.5" placeholder="Ahmed" required />
+                                </div>
+                                <span asp-validation-for="f_lname" class="text-danger small px-2"></span>
+                            </div>
+                        </div>
+
+                        <!-- Contact Metrics Rows Block -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-6">
+                                <label class="form-label fw-bold text-dark small text-uppercase tracking-wider">Phone Number</label>
+                                <div class="input-group border rounded-pill overflow-hidden bg-light shadow-sm">
+                                    <span class="input-group-text bg-transparent border-0 text-muted ps-3"><i class="bi bi-telephone"></i></span>
+                                    <input type="tel" asp-for="f_phone" class="form-control bg-transparent border-0 py-2.5" placeholder="+919876543210" required />
+                                </div>
+                                <span asp-validation-for="f_phone" class="text-danger small px-2"></span>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-bold text-dark small text-uppercase tracking-wider">Email Address</label>
+                                <div class="input-group border rounded-pill overflow-hidden bg-light shadow-sm">
+                                    <span class="input-group-text bg-transparent border-0 text-muted ps-3"><i class="bi bi-envelope"></i></span>
+                                    <input type="email" asp-for="f_email" class="form-control bg-transparent border-0 py-2.5" placeholder="name@domain.com" required />
+                                </div>
+                                <span asp-validation-for="f_email" class="text-danger small px-2"></span>
+                            </div>
+                        </div>
+
+                        <!-- Password Configuration Block -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark small text-uppercase tracking-wider">Set Strong Password</label>
+                            <div class="input-group border rounded-pill overflow-hidden bg-light shadow-sm">
+                                <span class="input-group-text bg-transparent border-0 text-muted ps-3"><i class="bi bi-shield-lock"></i></span>
+                                <input type="password" asp-for="f_password_hash" class="form-control bg-transparent border-0 py-2.5" placeholder="••••••••" required />
+                            </div>
+                            <span asp-validation-for="f_password_hash" class="text-danger small px-2"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-danger w-100 rounded-pill py-2.5 fw-bold shadow-sm mb-3">
+                            <i class="bi bi-person-plus-fill me-2"></i>Complete Registration
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="small text-muted m-0">Already matching coordinates? <a asp-action="Login" class="text-decoration-none text-danger fw-bold">Sign In Instead</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

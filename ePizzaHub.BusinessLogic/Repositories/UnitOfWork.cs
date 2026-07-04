@@ -11,6 +11,11 @@ namespace ePizzaHub.BusinessLogic.Repositories
         private readonly InvokeDataModel _invokeData;
         private IDbContextTransaction? _currentTransaction;
         private IPizzaRepository? _pizzas;
+        private ICartItemRepository? _cartItemRepository;
+        private IOrderRepository? _orderRepository;
+        private IOrderItemRepository? _orderItemRepository;
+        private IUserRepository? _users;
+        private IRoleRepository _roles;
 
         public UnitOfWork(ApplicationDbContext context, InvokeDataModel invokeData)
         {
@@ -18,13 +23,12 @@ namespace ePizzaHub.BusinessLogic.Repositories
             _invokeData = invokeData ?? throw new ArgumentNullException(nameof(invokeData));
         }
 
-        public ICartItemRepository CartItemRepository => new CartItemRepository(_context, _invokeData);
-
-        public IOrderItemRepository OrderItemRepository => new OrderItemRepository(_context, _invokeData);
-
-        public IOrderRepository OrderRepository => new OrderRepository(_context, _invokeData);
         public IPizzaRepository Pizzas => _pizzas ??= new PizzaRepository(_context, _invokeData);
-
+        public ICartItemRepository CartItemRepository => _cartItemRepository ??= new CartItemRepository(_context, _invokeData);
+        public IOrderRepository OrderRepository => _orderRepository ??= new OrderRepository(_context, _invokeData);
+        public IOrderItemRepository OrderItemRepository => _orderItemRepository ??= new OrderItemRepository(_context, _invokeData);
+        public IUserRepository Users => _users ??= new UserRepository(_context, _invokeData);
+        public IRoleRepository Roles => _roles ??= new RoleRepository(_context, _invokeData);
         public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();
