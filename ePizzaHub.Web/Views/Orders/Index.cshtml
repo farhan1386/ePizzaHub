@@ -1,0 +1,126 @@
+﻿@model ePizzaHub.Models.OrderModel
+@{
+    ViewData["Title"] = "Track Your Live Pizza Order";
+    int statusStep = Model != null ? (int)Model.f_order_status : -1;
+}
+
+<div class="container py-5">
+    @if (Model == null)
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-light text-center">
+                    <i class="bi bi-geo-alt-fill text-danger display-4 mb-3"></i>
+                    <h3 class="fw-bold text-dark mb-2">Track Your Pizza</h3>
+                    <p class="text-muted mb-4">Enter your unique 8-character or standard GUID order tracking code to view our live baking kitchen logs.</p>
+
+                    <form method="get" action="@Url.Action("Index", "Orders")">
+                        <div class="input-group rounded-pill border overflow-hidden bg-white shadow-sm mb-3 p-1">
+                            <input type="text" name="id" class="form-control bg-transparent border-0 py-2.5 ps-3 fw-bold text-dark font-monospace" placeholder="e.g. 6b75d376..." required />
+                            <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">Locate Order</button>
+                        </div>
+                    </form>
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger rounded-3 small mb-0 mt-2 py-2" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["ErrorMessage"]
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom pb-3 mb-4 gap-2">
+                        <div>
+                            <span class="badge bg-danger rounded-pill mb-2 px-3 py-1.5 fw-bold"><i class="bi bi-lightning-charge-fill me-1"></i>Live Order Tracker</span>
+                            <h4 class="fw-bold text-dark mb-0">Invoice Reference ID: <span class="font-monospace text-secondary">@Model.f_uid.ToString().Substring(0, 8)</span></h4>
+                        </div>
+                        <div class="text-lg-end">
+                            <small class="text-muted d-block">Placed On Date</small>
+                            <span class="fw-bold text-dark">@Model.f_create_date?.ToString("f")</span>
+                        </div>
+                    </div>
+
+                    <div class="position-relative py-4 px-2">
+                        <div class="progress position-absolute top-50 start-0 translate-middle-y w-100 d-none d-md-flex" style="height: 6px; z-index: 1;">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: @(statusStep * 33.33)%;"></div>
+                        </div>
+
+                        <div class="row row-cols-1 row-cols-md-4 g-4 position-relative z-2 text-center text-md-start">
+                            <div class="col d-flex flex-md-column align-items-center gap-3 gap-md-2">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm @(statusStep >= 0 ? "bg-danger text-white" : "bg-light text-muted border")" style="width: 45px; height: 45px; font-size: 1.25rem;">
+                                    <i class="bi bi-receipt"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-0 mt-md-2 @(statusStep >= 0 ? "text-danger" : "text-muted")">Order Placed</h6>
+                                    <small class="text-muted d-block small">Payload Synced</small>
+                                </div>
+                            </div>
+
+                            <div class="col d-flex flex-md-column align-items-center gap-3 gap-md-2">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm @(statusStep >= 1 ? "bg-danger text-white" : "bg-light text-muted border")" style="width: 45px; height: 45px; font-size: 1.25rem;">
+                                    <i class="bi bi-fire"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-0 mt-md-2 @(statusStep >= 1 ? "text-danger" : "text-muted")">Baking In Oven</h6>
+                                    <small class="text-muted d-block small">Cheese Melting</small>
+                                </div>
+                            </div>
+
+                            <div class="col d-flex flex-md-column align-items-center gap-3 gap-md-2">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm @(statusStep >= 2 ? "bg-danger text-white" : "bg-light text-muted border")" style="width: 45px; height: 45px; font-size: 1.25rem;">
+                                    <i class="bi bi-truck"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-0 mt-md-2 @(statusStep >= 2 ? "text-danger" : "text-muted")">Out For Delivery</h6>
+                                    <small class="text-muted d-block small">Rider On Way</small>
+                                </div>
+                            </div>
+
+                            <div class="col d-flex flex-md-column align-items-center gap-3 gap-md-2">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm @(statusStep >= 3 ? "bg-success text-white" : "bg-light text-muted border")" style="width: 45px; height: 45px; font-size: 1.25rem;">
+                                    <i class="bi bi-house-heart-fill"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-0 mt-md-2 @(statusStep >= 3 ? "text-success" : "text-muted")">Delivered!</h6>
+                                    <small class="text-muted d-block small">Enjoy Fresh Pizza</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-light">
+                    <h5 class="fw-bold text-dark mb-4 border-bottom pb-2">Delivery Summary</h5>
+                    <div class="mb-3">
+                        <small class="text-muted d-block uppercase font-bold tracking-wider fs-7 mb-1"><i class="bi bi-geo-alt-fill me-1 text-danger"></i>Destination Address</small>
+                        <span class="fw-semibold text-dark text-wrap d-block">@Model.f_delivery_address</span>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block uppercase font-bold tracking-wider fs-7 mb-1"><i class="bi bi-telephone-fill me-1 text-danger"></i>Contact Hotline</small>
+                        <span class="fw-semibold text-dark font-monospace">@Model.f_contact_phone</span>
+                    </div>
+                    <div class="mb-4">
+                        <small class="text-muted d-block uppercase font-bold tracking-wider fs-7 mb-1"><i class="bi bi-wallet2 me-1 text-danger"></i>Payment Verification</small>
+                        <span class="badge @(Model.f_is_paid ? "bg-success-subtle text-success border border-success" : "bg-warning-subtle text-warning border border-warning") px-3 py-1.5 fw-bold rounded-pill">
+                            @(Model.f_is_paid ? "Transaction Paid" : "Cash On Delivery Pending")
+                        </span>
+                    </div>
+                    <hr class="text-muted mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-0">
+                        <span class="fw-bold text-dark fs-5">Amount Collected</span>
+                        <span class="fw-bold text-danger fs-4">$@Model.f_total_amount.ToString("F2")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

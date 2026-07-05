@@ -105,37 +105,5 @@ namespace ePizzaHub.Web.Controllers
 
             return RedirectToAction("Index", "Pizzas");
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Remove(Guid uid)
-        {
-            if (uid == Guid.Empty)
-            {
-                TempData["ErrorMessage"] = "Invalid item tracking identifier provided.";
-                return RedirectToAction(nameof(Index));
-            }
-
-            try
-            {
-                var response = await _httpClient.DeleteAsync($"api/CartItems/{uid}");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    TempData["SuccessMessage"] = "Item successfully removed from your cart.";
-                    return RedirectToAction(nameof(Index));
-                }
-
-                _logger.LogWarning("Failed to delete cart item {Uid}. API returned status code: {StatusCode}", uid, response.StatusCode);
-                TempData["ErrorMessage"] = "The server could not process the removal request.";
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to execute deletion tracking handle for item {Uid}", uid);
-                TempData["ErrorMessage"] = "A network error occurred while updating your cart.";
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
     }
 }

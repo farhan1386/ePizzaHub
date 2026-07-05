@@ -16,10 +16,17 @@ namespace ePizzaHub.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderModel>>> Get()
+        public async Task<ActionResult<IEnumerable<OrderModel>>> Get([FromQuery] string? sessionUid = null)
         {
-            var result = await _orderService.GetOrdersAsync();
-            return Ok(result);
+            var allOrders = await _orderService.GetOrdersAsync();
+
+            if (!string.IsNullOrEmpty(sessionUid))
+            {
+                var filtered = allOrders.Where(o => o.f_customer_user_uid == sessionUid);
+                return Ok(filtered);
+            }
+
+            return Ok(allOrders);
         }
 
         [HttpGet("{uid:guid}")]
@@ -31,6 +38,22 @@ namespace ePizzaHub.API.Controllers
                 return NotFound();
             }
             return Ok(result);
+        }
+
+        [HttpGet("search/{keyword}")]
+        public async Task<ActionResult<OrderModel>> Search(string keyword)
+        {
+            var allOrders = await _orderService.GetOrdersAsync();
+            var match = allOrders.FirstOrDefault(o =>
+                o.f_uid.ToString().Equals(keyword, StringComparison.OrdinalIgnoreCase) ||
+                o.f_uid.ToString().StartsWith(keyword, StringComparison.OrdinalIgnoreCase)
+            );
+
+            if (match == null)
+            {
+                return NotFound();
+            }
+            return Ok(match);
         }
 
         [HttpPost("grid")]

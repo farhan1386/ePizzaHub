@@ -138,7 +138,7 @@ namespace ePizzaHub.BusinessLogic.Data
                 f_name = "Classic Margherita",
                 f_description = "Traditional fresh mozzarella cheese, rich herb tomato base sauce, and basil leaves.",
                 f_price = 10.99m,
-                f_image_url = "https://placehold.co", // Added clean image suffix
+                f_image_url = "/images/margherita.jpg",
                 f_is_available = true,
                 f_category_uid = vegCategory.f_uid,
                 f_create_date = DateTime.Now,
@@ -151,7 +151,7 @@ namespace ePizzaHub.BusinessLogic.Data
                 f_name = "Spicy Pepperoni Supreme",
                 f_description = "Loaded with double premium cured pepperoni slices, mozzarella, and hot jalapeños.",
                 f_price = 14.49m,
-                f_image_url = "https://placehold.co", // Added clean image suffix
+                f_image_url = "/images/pepperoni.jpg",
                 f_is_available = true,
                 f_category_uid = nonVegCategory.f_uid,
                 f_create_date = DateTime.Now,
@@ -164,7 +164,7 @@ namespace ePizzaHub.BusinessLogic.Data
                 f_name = "Smoky BBQ Chicken",
                 f_description = "Grilled chicken chunks, red sweet onions, bell peppers, and signature smoky BBQ drizzle.",
                 f_price = 13.99m,
-                f_image_url = "https://placehold.co", // Added clean image suffix
+                f_image_url = "/images/bbq-chicken.jpg",
                 f_is_available = true,
                 f_category_uid = nonVegCategory.f_uid,
                 f_create_date = DateTime.Now,

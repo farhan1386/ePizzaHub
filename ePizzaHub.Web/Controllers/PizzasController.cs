@@ -15,6 +15,13 @@ namespace ePizzaHub.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            string? sessionUid = HttpContext.Session.GetString("CustomerSessionUid");
+            if (string.IsNullOrEmpty(sessionUid))
+            {
+                sessionUid = Guid.NewGuid().ToString();
+                HttpContext.Session.SetString("CustomerSessionUid", sessionUid);
+            }
+
             var items = await _httpClient.GetFromJsonAsync<IEnumerable<PizzaModel>>("api/pizzas");
             return View(items ?? Array.Empty<PizzaModel>());
         }
@@ -30,12 +37,10 @@ namespace ePizzaHub.Web.Controllers
             return View(match);
         }
 
-        // POST: Pizzas/AddToCart
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToCart(Guid pizzaUid, int quantity)
         {
-            // 1. Establish or extract unique identification tracking cookie session for your user
             string? sessionUid = HttpContext.Session.GetString("CustomerSessionUid");
             if (string.IsNullOrEmpty(sessionUid))
             {
@@ -43,24 +48,21 @@ namespace ePizzaHub.Web.Controllers
                 HttpContext.Session.SetString("CustomerSessionUid", sessionUid);
             }
 
-            // 2. Align your submission payload data structure directly matching CartItemModel
             var cartItemPayload = new
             {
                 f_customer_session_uid = sessionUid,
                 f_pizza_uid = pizzaUid,
                 f_quantity = quantity,
                 f_create_date = DateTime.Now,
-                f_create_by = Guid.Empty // Safe operational system baseline marker for fallback items
+                f_create_by = Guid.Empty
             };
 
             try
             {
-                // 3. Dispatch the payload parameters downstream via API routing structure
                 var response = await _httpClient.PostAsJsonAsync("api/CartItems", cartItemPayload);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Redirect back to catalog to explore more items
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -71,7 +73,6 @@ namespace ePizzaHub.Web.Controllers
                 ModelState.AddModelError("", $"Failed to bridge session communication channels: {ex.Message}");
             }
 
-            // Fallback back onto details display view context if structural transaction is blocked
             return RedirectToAction(nameof(Details), new { uid = pizzaUid });
         }
 

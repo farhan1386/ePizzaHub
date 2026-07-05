@@ -4,11 +4,11 @@
 }
 
 <div class="container py-5">
-    <h1 class="display-6 fw-black text-dark mb-4"><i class="bi bi-cart4 text-danger me-2"></i>Review Your Order</h1>
+    <h1 class="display-6 fw-bold text-dark mb-4"><i class="bi bi-cart4 text-danger me-2"></i>Review Your Order</h1>
 
     @if (Model == null || !Model.Any())
     {
-        <div class="text-center py-5 border rounded-4 bg-light">
+        <div id="empty-cart-view" class="text-center py-5 border border-0 shadow-sm rounded-4 bg-light">
             <i class="bi bi-basket3 text-muted display-1 mb-3 d-block"></i>
             <h4 class="fw-bold text-secondary">Your basket is completely empty</h4>
             <p class="text-muted mb-4">Looks like you haven't added any fresh pizza dough selections yet.</p>
@@ -17,46 +17,56 @@
     }
     else
     {
-        <div class="row g-4">
+        <div class="row g-4" id="cart-container">
             <div class="col-lg-8">
                 <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
                     <div class="table-responsive">
-                        <table class="table table-align-middle mb-0 text-center text-md-start">
+                        <table class="table table-hover align-middle mb-0" id="cart-table">
                             <thead class="table-dark">
                                 <tr>
-                                    <th class="ps-4 text-start">Item Details</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th class="pe-4 text-end">Total</th>
-                                    <th></th>
+                                    <th class="ps-4 text-start" style="width: 45%;">Item Details</th>
+                                    <th class="text-center" style="width: 15%;">Price</th>
+                                    <th class="text-center" style="width: 15%;">Quantity</th>
+                                    <th class="text-end" style="width: 15%;">Total</th>
+                                    <th class="pe-4 text-end" style="width: 10%;"></th>
                                 </tr>
                             </thead>
-                            <tbody class="border-top-0">
+                            <tbody>
                                 @foreach (var item in Model)
                                 {
                                     if (item.f_pizza != null)
                                     {
-                                        <tr>
+                                        <tr data-uid="@item.f_uid" data-price="@item.f_pizza.f_price">
                                             <td class="ps-4 py-3 text-start">
-                                                <div class="d-flex align-items-center gap-3">
-                                                    <img src="@item.f_pizza.f_image_url" style="width: 50px; height: 50px; object-fit: cover;" class="rounded-3" alt="@item.f_pizza.f_name" onerror="this.src='https://placehold.co'">
-                                                    <div>
-                                                        <h6 class="fw-bold mb-0 text-dark">@item.f_pizza.f_name</h6>
-                                                        <small class="text-muted font-monospace">Ref ID: @item.f_uid.ToString().Substring(0, 8)</small>
+                                                <div class="d-flex align-items-center gap-3" style="min-width: 250px;">
+                                                    <img src="https://localhost:7204@(item.f_pizza.f_image_url)"
+                                                         style="width: 60px; height: 60px; object-fit: cover;"
+                                                         class="rounded-3 border flex-shrink-0"
+                                                         alt="@item.f_pizza.f_name"
+                                                         onerror="this.onerror=null; this.src='https://placehold.co';">
+                                                    <div class="flex-grow-1 overflow-hidden">
+                                                        <h6 class="fw-bold mb-1 text-dark text-wrap lh-sm">@item.f_pizza.f_name</h6>
+                                                        <small class="text-muted font-monospace d-block text-truncate small">Ref ID: @item.f_uid.ToString().Substring(0, 8)</small>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="py-3 align-middle">$@item.f_pizza.f_price</td>
-                                            <td class="py-3 align-middle">
-                                                <span class="badge bg-light text-dark border fs-6 px-3 py-2 rounded-pill">@item.f_quantity</span>
+                                            <td class="py-3 text-center text-secondary fw-semibold">$@item.f_pizza.f_price.ToString("F2")</td>
+                                            <td class="py-3 text-center">
+                                                <div class="d-inline-flex align-items-center bg-light border rounded-pill overflow-hidden p-1 shadow-sm">
+                                                    <button type="button" class="btn btn-sm btn-light text-dark rounded-circle btn-decrease p-0 d-flex align-items-center justify-content-center" style="width: 28px; height: 28px;">
+                                                        <i class="bi bi-dash-lg fw-bold" style="font-size: 0.85rem;"></i>
+                                                    </button>
+                                                    <span class="px-3 fw-bold text-dark text-center item-quantity" style="min-width: 40px;">@item.f_quantity</span>
+                                                    <button type="button" class="btn btn-sm btn-light text-dark rounded-circle btn-increase p-0 d-flex align-items-center justify-content-center" style="width: 28px; height: 28px;">
+                                                        <i class="bi bi-plus-lg fw-bold" style="font-size: 0.85rem;"></i>
+                                                    </button>
+                                                </div>
                                             </td>
-                                            <td class="py-3 align-middle text-end fw-bold text-dark">$@(item.f_pizza.f_price * item.f_quantity)</td>
-                                            <td class="pe-4 py-3 align-middle text-end">
-                                                <!-- Trash Button Trigger to Remove Item -->
-                                                <form asp-controller="CartItems" asp-action="Remove" asp-route-uid="@item.f_uid" method="post" class="d-inline">
-                                                    @Html.AntiForgeryToken()
-                                                    <button type="submit" class="btn btn-link text-danger p-0 shadow-none"><i class="bi bi-trash3 fs-5"></i></button>
-                                                </form>
+                                            <td class="py-3 text-end fw-bold text-dark item-total">$@((item.f_pizza.f_price * item.f_quantity).ToString("F2"))</td>
+                                            <td class="pe-4 py-3 text-end">
+                                                <button type="button" class="btn btn-link text-danger p-1 shadow-none btn-remove" title="Remove Item">
+                                                    <i class="bi bi-trash3 fs-5"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     }
@@ -67,28 +77,99 @@
                 </div>
             </div>
 
-            <!-- Right Summary Widget Side Panel Block -->
             <div class="col-lg-4">
                 <div class="card border-0 shadow-sm rounded-4 p-4 bg-light">
-                    <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">Order Breakdown</h5>
-                    <div class="d-flex justify-content-between mb-2 small text-muted">
+                    <h5 class="fw-bold text-dark mb-4 border-bottom pb-2">Order Summary</h5>
+                    <div class="d-flex justify-content-between mb-3 text-secondary fw-medium">
                         <span>Items Subtotal</span>
-                        <span>$@ViewBag.SubTotal?.ToString("F2")</span>
+                        <span class="text-dark" id="cart-subtotal">$@ViewBag.SubTotal?.ToString("F2")</span>
                     </div>
-                    <div class="d-flex justify-content-between mb-2 small text-muted">
+                    <div class="d-flex justify-content-between mb-3 text-secondary fw-medium">
                         <span>Tax / Processing (5% VAT)</span>
-                        <span>$@ViewBag.TaxAmount?.ToString("F2")</span>
+                        <span class="text-dark" id="cart-tax">$@ViewBag.TaxAmount?.ToString("F2")</span>
                     </div>
-                    <hr>
-                    <div class="d-flex justify-content-between mb-4 fs-5 fw-black text-danger">
-                        <span>Estimated Total</span>
-                        <span>$@ViewBag.GrandTotal?.ToString("F2")</span>
+                    <hr class="text-muted my-3">
+                    <div class="d-flex justify-content-between mb-4 align-items-center">
+                        <span class="fw-bold text-dark fs-5">Estimated Total</span>
+                        <span class="text-danger fs-4 fw-bold" id="cart-grandtotal">$@ViewBag.GrandTotal?.ToString("F2")</span>
                     </div>
-                    <button class="btn btn-danger btn-lg w-100 rounded-pill fw-bold shadow py-3">
-                        Proceed to Checkout <i class="bi bi-arrow-right ms-2"></i>
+                    <button class="btn btn-danger btn-lg w-100 rounded-pill fw-bold shadow-sm py-3 d-flex align-items-center justify-content-center gap-2">
+                        Proceed to Checkout <i class="bi bi-arrow-right"></i>
                     </button>
                 </div>
             </div>
         </div>
     }
 </div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            function updateCartTotals() {
+                let subTotal = 0;
+
+                $("#cart-table tbody tr").each(function () {
+                    let price = parseFloat($(this).data("price"));
+                    let quantity = parseInt($(this).find(".item-quantity").text());
+                    let rowTotal = price * quantity;
+
+                    $(this).find(".item-total").text("$" + rowTotal.toFixed(2));
+                    subTotal += rowTotal;
+                });
+
+                if (subTotal === 0) {
+                    location.reload();
+                    return;
+                }
+
+                let taxAmount = subTotal * 0.05;
+                let grandTotal = subTotal + taxAmount;
+
+                $("#cart-subtotal").text("$" + subTotal.toFixed(2));
+                $("#cart-tax").text("$" + taxAmount.toFixed(2));
+                $("#cart-grandtotal").text("$" + grandTotal.toFixed(2));
+            }
+
+            $(".btn-increase").click(function () {
+                let row = $(this).closest("tr");
+                let uid = row.data("uid");
+                let qtySpan = row.find(".item-quantity");
+
+                $.post("/CartItems/Increase", { uid: uid }, function () {
+                    let currentQty = parseInt(qtySpan.text());
+                    qtySpan.text(currentQty + 1);
+                    updateCartTotals();
+                });
+            });
+
+            $(".btn-decrease").click(function () {
+                let row = $(this).closest("tr");
+                let uid = row.data("uid");
+                let qtySpan = row.find(".item-quantity");
+                let currentQty = parseInt(qtySpan.text());
+
+                if (currentQty > 1) {
+                    $.post("/CartItems/Decrease", { uid: uid }, function () {
+                        qtySpan.text(currentQty - 1);
+                        updateCartTotals();
+                    });
+                } else {
+                    row.find(".btn-remove").trigger("click");
+                }
+            });
+
+            $(".btn-remove").click(function () {
+                let row = $(this).closest("tr");
+                let uid = row.data("uid");
+
+                if (confirm("Are you sure you want to remove this item?")) {
+                    $.post("/CartItems/Remove", { uid: uid }, function () {
+                        row.fadeOut(300, function () {
+                            $(this).remove();
+                            updateCartTotals();
+                        });
+                    });
+                }
+            });
+        });
+    </script>
+}

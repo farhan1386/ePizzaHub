@@ -1,6 +1,53 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Privacy Policy & Data Protection";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="d-flex align-items-center gap-3 border-bottom pb-3 mb-4">
+                <i class="bi bi-shield-lock-fill text-danger display-5"></i>
+                <div>
+                    <h1 class="fw-bold text-dark mb-0">@ViewData["Title"]</h1>
+                    <small class="text-muted">Last Updated: @DateTime.UtcNow.ToString("MMMM dd, yyyy")</small>
+                </div>
+            </div>
+
+            <p class="lead text-secondary mb-5">
+                At ePizzaHub, we value your trust and are committed to safeguarding your personal transaction properties. This document clarifies how our framework manages, secures, and maps data elements.
+            </p>
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-light">
+                <h4 class="fw-bold text-dark mb-3"><i class="bi bi-cookie text-danger me-2"></i>1. Tracking Cookies & Active Session Keys</h4>
+                <p class="text-secondary mb-0">
+                    To maintain transactional continuity, our engine establishes an encrypted memory tracker parameter (<code class="text-danger">CustomerSessionUid</code>) when you browse our storefront menu layouts. This cookie tracks anonymous item quantities and shopping basket models across state transitions, preventing your choices from resetting to zero.
+                </p>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-light">
+                <h4 class="fw-bold text-dark mb-3"><i class="bi bi-database-fill-check text-danger me-2"></i>2. Core Order Information Processing</h4>
+                <p class="text-secondary mb-3">
+                    When pushing data variables downstream via our Checkout channel operations, we collect the necessary context parameters to fulfill food deliveries safely:
+                </p>
+                <ul class="text-secondary ps-4 mb-0">
+                    <li class="mb-2"><strong>Identity Profiles:</strong> Customer profile mapping tags, email handles, and verified authorization hashes.</li>
+                    <li class="mb-2"><strong>Location Properties:</strong> Street address variables and delivery routing targets.</li>
+                    <li class="mb-0"><strong>Transaction Logs:</strong> Aggregated subtotal amounts and payment method type tokens.</li>
+                </ul>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-light">
+                <h4 class="fw-bold text-dark mb-3"><i class="bi bi-eye-slash-fill text-danger me-2"></i>3. External Data Sharing Restrictions</h4>
+                <p class="text-secondary mb-0">
+                    We enforce strict network endpoint segregation. Third-party actors cannot query your internal transactional payload databases. Session identifiers are kept private and expire automatically after 30 minutes of inactivity.
+                </p>
+            </div>
+
+            <div class="text-center mt-5">
+                <a asp-controller="Pizzas" asp-action="Index" class="btn btn-outline-danger rounded-pill px-4 py-2 fw-bold shadow-sm">
+                    <i class="bi bi-arrow-left me-2"></i>Return to Menu Marketplace
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
